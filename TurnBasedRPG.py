@@ -8,26 +8,24 @@ def main():
     player = Player(gender, name)
     # weapon = Weapon("Wooden Sword", 30, 10)
     print(
-        "\n-- This is the story of the brave {player_name}, {pronoun} travelled "
+        "\n-- This is the story of the brave {}, {} travelled "
         "through the lands of Codia in search of epic treasure") \
-        .format(player_name=player.name, pronoun=player.gender.he_she)
+        .format(player.name, player.gender.he_she)
     day = 0
     while player.health > 0:
         day += 1
         player.show_stats()
-        print("\n- Day {day_number}:".format(day_number=day))
+        print("\n- Day {}:".format(day))
         generate_next_event(player)
-        print("- End of day {day_number}:".format(day_number=day))
+        print("- End of day {}:".format(day))
 
-    print("\n-- {player_name} died on day {day}, game over...".format(player_name=player.name,
-                                                                      player_xp=player.xp, day=day))
+    print("\n-- {} died on day {}, game over...".format(player.name, player.xp, day))
     if player.xp == 0:
         player.xp = 1
     print("Your score was: {}".format(player.xp * day))
 
 
 def ask_gender(message):
-    # return "M"
     value = raw_input(message).upper()
     if value.isalpha() and (value == "M" or value == "F"):
         return value
@@ -37,9 +35,6 @@ def ask_gender(message):
 
 
 def ask_reaction(message):
-    # reactions = ("attack", "flee", "intimidate")
-    # return "attack"
-    # return reactions[random.randint(0, reactions.__len__() - 1)]
     value = raw_input(message).lower()
     if value.isalpha() and (value == "attack" or value == "flee" or value == "inventory" or value == "intimidate"):
         return value
@@ -49,7 +44,6 @@ def ask_reaction(message):
 
 
 def ask_input(input_type, message):
-    # return "Tester"
     value = raw_input(message)
     if input_type == "int":
         try:
@@ -73,7 +67,6 @@ def generate_next_event(p):
     #    event = ItemEvent(p)
     else:
         event = MiscEvent(p)
-
     return event
 
 
@@ -81,21 +74,13 @@ class MonsterEvent:
     def __init__(self, p):
         self.monster = Monster(p)
         print(
-            "-- {player_name} stumbled upon a {monster_name} with power level {monster_power}".format(
-                    player_name=p.name,
-                    monster_name=self.monster.name,
-                    monster_power=(
-                                      random.randint(
-                                              int(
-                                                      p.level / 1.2),
-                                              int(
-                                                      p.level / 1.2))) + 1))
+            "-- {} stumbled upon a {} with power level {}".format(p.name, self.monster.name, (
+                random.randint(int(p.level / 1.2), int(p.level / 1.2))) + 1))
         self.in_event = True
         while self.in_event and self.monster.health > 0 and p.health > 0:
-            print("|  {monster_name}'s stats:".format(monster_name=self.monster.name))
-            print("|  HP: {monster_hp}".format(monster_hp=self.monster.health))
-            print("|  Attack Damage: {monster_ad}".format(monster_ad=self.monster.attack))
-            # p.take_damage(monster.attack)
+            print("|  {}'s stats:".format(self.monster.name))
+            print("|  HP: {}".format(self.monster.health))
+            print("|  Attack Damage: {}".format(self.monster.attack))
             p.do_reaction(p.show_options(), self)
             if self.monster.health > 0 and self.in_event is True:
                 if self.monster.attack > 0:
@@ -125,7 +110,6 @@ class Monster:
     def do_attack(self, p):
         print("-- {} attacked".format(self.name)),
         amount = self.attack
-        # p.take_damage(self, self.attack)
         if random.randint(0, 100) >= 8:
             print("and dealt"),
             if random.randint(0, 100) <= 8:
@@ -208,7 +192,6 @@ class Player:
                 self.xp += gained_xp
                 print("-- {} got {} XP for killing the monster (Total XP: {})".format(self.name, gained_xp, self.xp))
         elif reaction == "flee":
-            # print("-- {} chose to {}".format(self.name, reaction))
             if random.randint(0, 100) <= 65:
                 print("-- {} fled from the monster".format(self.name))
                 event.in_event = False
@@ -217,7 +200,6 @@ class Player:
         elif reaction == "inventory":
             print("-- {} chose to {}".format(self.name, reaction))
         elif reaction == "intimidate":
-            # print("-- {} chose to {}".format(self.name, reaction))
             if random.randint(0, 100) <= 35:
                 print("-- {} intimidated the {} and its Attack Damage halved!".format(self.name, event.monster.name))
                 event.monster.attack /= 2
